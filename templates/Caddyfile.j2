@@ -1,6 +1,7 @@
 ## {{ ansible_managed }}
 {% if caddy_tls_providers is defined %}
 {% for item in caddy_tls_providers %}
+
 ({{ item.provider }}) {
     tls {
         {{ item.challenge_type }} {{ item.provider }} {{ item.provider_api_token }}
@@ -24,7 +25,7 @@
 {% for wildcard_endpoint in endpoint.wildcard_endpoints %}
     @{{ ( wildcard_endpoint.fqdn | split(".") )[0] }} host {{ wildcard_endpoint.fqdn }}
     handle @{{ ( wildcard_endpoint.fqdn | split(".") )[0] }} {
-{% if wildcard_endpoint.tls_insecure %}
+{% if wildcard_endpoint.tls_insecure | default(false) %}
         reverse_proxy {{ wildcard_endpoint.upstream }} {
             transport http {
                 tls_insecure_skip_verify
@@ -43,7 +44,7 @@
     }
 }
 {% else %}
-{% if endpoint.tls_insecure %}
+{% if endpoint.tls_insecure | default(false) %}
 {{ endpoint.fqdn }} {
     reverse_proxy {{ endpoint.upstream }} {
         transport http {
