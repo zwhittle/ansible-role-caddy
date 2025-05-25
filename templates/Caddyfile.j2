@@ -1,4 +1,10 @@
 ## {{ ansible_managed }}
+## Global options
+{
+    email {{ caddy_admin_email }}
+    acme_ca {{ caddy_acme_ca }}
+}
+
 {% if caddy_tls_providers is defined %}
 {% for item in caddy_tls_providers %}
 
