@@ -1,9 +1,13 @@
 ## {{ ansible_managed }}
-## Global options
-{
-    email {{ caddy_admin_email }}
-    acme_ca {{ caddy_acme_ca }}
+
+{% if caddy_global_options is defined %} {
+    # Global options
+    # https://caddyserver.com/docs/caddyfile/options
+    {% for option in caddy_global_options %}
+    {{ option.key }} {{ option.value }}
+    {% endfor %}
 }
+{% endif %}
 
 {% if caddy_tls_providers is defined %}
 {% for item in caddy_tls_providers %}
